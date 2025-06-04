@@ -3,19 +3,18 @@ name: Deploy HTML Site to EC2
 on:
   push:
     branches:
-      - main  # or your default branch
+      - main
 
 jobs:
   deploy:
-    name: Deploy to EC2
     runs-on: ubuntu-latest
 
     env:
-      HOST: ${{ secrets.SECRET1 }}     # e.g., 3.137.208.106
-      USER: ${{ secrets.SECRET2 }}     # e.g., ubuntu
+      HOST: ${{ secrets.SECRET1 }}     # e.g. 3.137.208.106
+      USER: ${{ secrets.SECRET2 }}     # e.g. ubuntu
 
     steps:
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up SSH key
@@ -25,10 +24,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
-      - name: Deploy Docker Image to EC2
+      - name: Deploy Docker Image
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$UBUNTU << 'EOF'
-            docker pull akshayvyas12/my-html-site
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
+            docker pull akshayvyas12/my-html-site:latest
             docker stop my-html-site || true
             docker rm my-html-site || true
             docker run -d --name my-html-site -p 80:80 akshayvyas12/my-html-site:latest
