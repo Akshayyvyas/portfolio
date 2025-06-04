@@ -21,8 +21,8 @@ jobs:
 
     - name: Deploy Docker container on EC2
       env:
-        HOST: ${{ secrets.3.137.208.106 }}
-        USER: ${{ secrets.Ubuntu }}
+        HOST: ${{ secrets.SECRET1 }}
+        USER: ${{ secrets.SECRET2 }}
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
           # Pull latest Docker image from Docker Hub
