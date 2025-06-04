@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to EC2 via SSH
         run: |
-          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.ubuntu }}@${{ secrets.3.137.208.106 }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no -i front-app.pem ${{ secrets.ubuntu }}@${{ secrets.3.137.208.106 }} << 'EOF'
             docker pull akshayvyas12/my-html-site
             docker stop frontend || true
             docker rm frontend || true
