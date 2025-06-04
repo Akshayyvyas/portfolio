@@ -27,8 +27,8 @@ jobs:
 
       - name: Deploy Docker Image to EC2
         run: |
-          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
-            docker pull akshayvyas12/my-html-site:latest
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$UBUNTU << 'EOF'
+            docker pull akshayvyas12/my-html-site
             docker stop my-html-site || true
             docker rm my-html-site || true
             docker run -d --name my-html-site -p 80:80 akshayvyas12/my-html-site:latest
