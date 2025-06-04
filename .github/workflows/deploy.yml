@@ -21,7 +21,7 @@ jobs:
     - name: Deploy Docker container on EC2
       env:
         HOST: ${{ secrets.SECRET1 }}
-        USER: ${{ secrets.EC2_SECRET2 }}
+        USER: ${{ secrets.SECRET2 }}
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
           docker pull akshayvyas12/my-html-site:latest
