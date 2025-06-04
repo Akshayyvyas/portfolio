@@ -1,4 +1,4 @@
-name: Deploy HTML Site to EC2
+name: Deploy Docker Image to EC2
 
 on:
   push:
@@ -10,21 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      HOST: ${{ secrets.SECRET1 }}     # e.g. 3.137.208.106
-      USER: ${{ secrets.SECRET2 }}     # e.g. ubuntu
+      HOST: ${{ secrets.SECRET1 }}
+      USER: ${{ secrets.SECRET2 }}
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up SSH key
+      - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
           echo "${{ secrets.SECRET3 }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
-      - name: Deploy Docker Image
+      - name: Deploy to EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
             docker pull akshayvyas12/my-html-site:latest
