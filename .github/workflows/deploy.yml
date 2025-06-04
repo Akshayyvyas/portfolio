@@ -1,0 +1,22 @@
+name: Deploy HTML site to Docker Hub
+
+on:
+  push:
+    branches: [main]  # Change to 'master' or your branch name if needed
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Log in to Docker Hub
+      run: echo "${{ secrets.Akshay@1909 }}" | docker login -u "${{ secrets.akshayvyas12 }}" --password-stdin
+
+    - name: Build Docker image
+      run: docker build -t ${{ secrets.akshayvyas12 }}/my-html-site:latest .
+
+    - name: Push Docker image
+      run: docker push ${{ secrets.akshayvyas12 }}/my-html-site:latest
