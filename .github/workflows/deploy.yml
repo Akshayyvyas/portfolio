@@ -1,39 +1,31 @@
-name: Deploy Frontend App to EC2
+name: Deploy Frontend to EC2
 
 on:
   push:
     branches:
-      - main   # or your default branch
+      - main   # or your branch
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
+    - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up SSH key
+    - name: Setup SSH Key
       run: |
-        mkdir -p ~/.ssh
         echo "${{ secrets.SECRET3 }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
 
     - name: Deploy Docker container on EC2
       env:
         HOST: ${{ secrets.SECRET1 }}
-        USER: ${{ secrets.SECRET2 }}
+        USER: ${{ secrets.EC2_SECRET2 }}
       run: |
         ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
-          # Pull latest Docker image from Docker Hub
           docker pull akshayvyas12/my-html-site:latest
-          
-          # Stop any running container (ignore error if none)
           docker stop my-html-site || true
-          
-          # Remove old container (ignore error if none)
           docker rm my-html-site || true
-          
-          # Run new container mapping port 80
           docker run -d --name my-html-site -p 80:80 akshayvyas12/my-html-site:latest
         EOF
