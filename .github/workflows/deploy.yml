@@ -1,26 +1,28 @@
-name: Build and Push Docker Image
+name: Deploy to EC2
 
 on:
   push:
     branches:
-      - main  # or 'master' if that's your default branch
+      - main
 
 jobs:
-  build-and-push:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout Repo
         uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.akshayvyas12 }}
-          password: ${{ secrets.Akshay_1909 }}
+      - name: Save EC2 Key
+        run: |
+          echo "${{ secrets.front-app.pem }}" > front-app.pem
+          chmod 600 front-app.pem
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.akshayvyas12 }}/my-html-site:latest .
-
-      - name: Push Docker image
-        run: docker push ${{ secrets.akshayvyas12 }}/my-html-site:latest
+      - name: Deploy to EC2 via SSH
+        run: |
+          ssh -o StrictHostKeyChecking=no -i key.pem ${{ secrets.ubuntu }}@${{ secrets.3.137.208.106 }} << 'EOF'
+            docker pull akshayvyas12/my-html-site
+            docker stop frontend || true
+            docker rm frontend || true
+            docker run -d -p 80:80 --name frontend akshayvyas12/my-html-site
+          EOF
